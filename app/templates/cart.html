@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}Shopping Cart — HomeMade Pickles & Snacks{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <h1 class="section-title">🛒 Your Shopping Cart</h1>
+
+        {% if cart_items %}
+        <div class="cart-layout">
+            <div class="cart-items">
+                {% for item in cart_items %}
+                <div class="cart-item">
+                    <div class="cart-item-image">
+                        <span class="product-emoji">{{ item.product.image }}</span>
+                    </div>
+                    <div class="cart-item-details">
+                        <h3>{{ item.product.name }}</h3>
+                        <p class="cart-item-price">₹{{ "%.2f"|format(item.product.price) }} each</p>
+                    </div>
+                    <div class="cart-item-qty">
+                        <form method="POST" action="{{ url_for('cart.update_cart', product_id=item.product.id) }}"
+                            class="qty-form">
+                            <button type="submit" name="quantity" value="{{ item.quantity - 1 }}"
+                                class="qty-btn">−</button>
+                            <span class="qty-display">{{ item.quantity }}</span>
+                            <button type="submit" name="quantity" value="{{ item.quantity + 1 }}"
+                                class="qty-btn">+</button>
+                        </form>
+                    </div>
+                    <div class="cart-item-subtotal">
+                        <span>₹{{ "%.2f"|format(item.subtotal) }}</span>
+                    </div>
+                    <div class="cart-item-remove">
+                        <a href="{{ url_for('cart.remove_from_cart', product_id=item.product.id) }}" class="btn-remove"
+                            title="Remove item">✕</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="cart-summary">
+                <h3>Order Summary</h3>
+                <div class="summary-row">
+                    <span>Items ({{ cart_items | length }})</span>
+                    <span>₹{{ "%.2f"|format(total) }}</span>
+                </div>
+                <div class="summary-row">
+                    <span>Delivery</span>
+                    <span class="free-delivery">FREE</span>
+                </div>
+                <hr>
+                <div class="summary-row summary-total">
+                    <span>Total</span>
+                    <span>₹{{ "%.2f"|format(total) }}</span>
+                </div>
+                <a href="{{ url_for('orders.checkout') }}" class="btn btn-primary btn-block">Proceed to Checkout →</a>
+                <a href="{{ url_for('products.product_list') }}" class="btn btn-outline btn-block">Continue Shopping</a>
+            </div>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <span class="empty-icon">🛒</span>
+            <h3>Your cart is empty</h3>
+            <p>Looks like you haven't added any pickles or snacks yet!</p>
+            <a href="{{ url_for('products.product_list') }}" class="btn btn-primary btn-lg">Start Shopping →</a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}Products — HomeMade Pickles & Snacks{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <h1 class="section-title">🛍️ Our Products</h1>
+        <p class="section-subtitle">Browse our collection of homemade pickles, chutneys, and snacks</p>
+
+        <!-- ─── Category Filter ────────────────────────────────────── -->
+        <div class="category-filter">
+            <a href="{{ url_for('products.product_list') }}"
+                class="filter-btn {% if not selected_category %}active{% endif %}">
+                All
+            </a>
+            {% for cat in categories %}
+            <a href="{{ url_for('products.product_list', category=cat) }}"
+                class="filter-btn {% if selected_category == cat %}active{% endif %}">
+                {{ cat }}
+            </a>
+            {% endfor %}
+        </div>
+
+        <!-- ─── Product Grid ───────────────────────────────────────── -->
+        {% if products %}
+        <div class="product-grid">
+            {% for product in products %}
+            <div class="product-card">
+                <div class="product-image">
+                    <span class="product-emoji">{{ product.image }}</span>
+                    <span class="product-category-badge">{{ product.category }}</span>
+                    {% if product.stock <= 5 and product.stock> 0 %}
+                        <span class="low-stock-badge">Only {{ product.stock }} left!</span>
+                        {% endif %}
+                </div>
+                <div class="product-info">
+                    <h3 class="product-name">{{ product.name }}</h3>
+                    <p class="product-desc">{{ product.description[:90] }}...</p>
+                    <div class="product-meta">
+                        <span class="stock-info {% if product.stock == 0 %}stock-out{% endif %}">
+                            {% if product.stock > 0 %}📦 {{ product.stock }} in stock{% else %}❌ Out of stock{% endif %}
+                        </span>
+                    </div>
+                    <div class="product-footer">
+                        <span class="product-price">₹{{ "%.2f"|format(product.price) }}</span>
+                        <div class="product-actions">
+                            <a href="{{ url_for('products.product_detail', product_id=product.id) }}"
+                                class="btn btn-sm btn-outline">Details</a>
+                            {% if product.stock > 0 %}
+                            <a href="{{ url_for('cart.add_to_cart', product_id=product.id) }}"
+                                class="btn btn-sm btn-primary">Add 🛒</a>
+                            {% else %}
+                            <span class="out-of-stock-btn">Sold Out</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <span class="empty-icon">🔍</span>
+            <h3>No products found</h3>
+            <p>Try selecting a different category.</p>
+            <a href="{{ url_for('products.product_list') }}" class="btn btn-primary">View All Products</a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

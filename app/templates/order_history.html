@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Order History — HomeMade Pickles & Snacks{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <h1 class="section-title">📦 Your Order History</h1>
+        <p class="section-subtitle">Track all your past orders</p>
+
+        {% if orders %}
+        <div class="orders-list">
+            {% for order in orders %}
+            <div class="order-card">
+                <div class="order-card-header">
+                    <div>
+                        <span class="order-id">{{ order.order_id }}</span>
+                        <span class="order-date">{{ order.created_at }}</span>
+                    </div>
+                    <span class="order-status status-{{ order.status|lower }}">{{ order.status }}</span>
+                </div>
+                <div class="order-card-body">
+                    {% for item in order['items'] %}
+                    <div class="order-item-row">
+                        <span>{{ item.name }} × {{ item.quantity }}</span>
+                        <span>₹{{ "%.2f"|format(item.subtotal) }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="order-card-footer">
+                    <span class="order-total">Total: ₹{{ "%.2f"|format(order.total_amount) }}</span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <span class="empty-icon">📦</span>
+            <h3>No orders yet</h3>
+            <p>Start shopping to see your orders here!</p>
+            <a href="{{ url_for('products.product_list') }}" class="btn btn-primary btn-lg">Start Shopping →</a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

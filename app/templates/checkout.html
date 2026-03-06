@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Checkout — HomeMade Pickles & Snacks{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <h1 class="section-title">📋 Checkout</h1>
+        <p class="section-subtitle">Review your order before placing it</p>
+
+        <div class="cart-layout">
+            <div class="cart-items">
+                <h3>Order Items</h3>
+                {% for item in cart_items %}
+                <div class="cart-item">
+                    <div class="cart-item-image">
+                        <span class="product-emoji">{{ item.product.image }}</span>
+                    </div>
+                    <div class="cart-item-details">
+                        <h3>{{ item.product.name }}</h3>
+                        <p class="cart-item-price">₹{{ "%.2f"|format(item.product.price) }} × {{ item.quantity }}</p>
+                    </div>
+                    <div class="cart-item-subtotal">
+                        <span>₹{{ "%.2f"|format(item.subtotal) }}</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="cart-summary">
+                <h3>Payment Summary</h3>
+                <div class="summary-row">
+                    <span>Subtotal</span>
+                    <span>₹{{ "%.2f"|format(total) }}</span>
+                </div>
+                <div class="summary-row">
+                    <span>Delivery</span>
+                    <span class="free-delivery">FREE</span>
+                </div>
+                <hr>
+                <div class="summary-row summary-total">
+                    <span>Total</span>
+                    <span>₹{{ "%.2f"|format(total) }}</span>
+                </div>
+
+                <form method="POST" action="{{ url_for('orders.place_order') }}">
+                    <button type="submit" class="btn btn-primary btn-block btn-lg">
+                        ✅ Place Order — ₹{{ "%.2f"|format(total) }}
+                    </button>
+                </form>
+                <a href="{{ url_for('cart.view_cart') }}" class="btn btn-outline btn-block">← Back to Cart</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard — HomeMade Pickles & Snacks{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <h1 class="section-title">⚙️ Admin Dashboard</h1>
+        <p class="section-subtitle">Manage inventory and view orders</p>
+
+        <!-- ─── Inventory Management ───────────────────────────────── -->
+        <div class="admin-section">
+            <h2>📦 Inventory Management</h2>
+            <div class="admin-table-wrapper">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Product</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Stock</th>
+                            <th>Update Stock</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for product in products %}
+                        <tr
+                            class="{% if product.stock == 0 %}row-out-of-stock{% elif product.stock <= 5 %}row-low-stock{% endif %}">
+                            <td><code>{{ product.id }}</code></td>
+                            <td>
+                                <span>{{ product.image }}</span>
+                                {{ product.name }}
+                            </td>
+                            <td>{{ product.category }}</td>
+                            <td>₹{{ "%.2f"|format(product.price) }}</td>
+                            <td>
+                                <span
+                                    class="stock-badge {% if product.stock == 0 %}badge-red{% elif product.stock <= 5 %}badge-yellow{% else %}badge-green{% endif %}">
+                                    {{ product.stock }}
+                                </span>
+                            </td>
+                            <td>
+                                <form method="POST"
+                                    action="{{ url_for('orders.admin_update_stock', product_id=product.id) }}"
+                                    class="stock-form">
+                                    <input type="number" name="stock" value="{{ product.stock }}" min="0"
+                                        class="stock-input">
+                                    <button type="submit" class="btn btn-sm btn-primary">Update</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ─── Recent Orders ──────────────────────────────────────── -->
+        <div class="admin-section">
+            <h2>🧾 Recent Orders</h2>
+            {% if orders %}
+            <div class="admin-table-wrapper">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Customer</th>
+                            <th>Items</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in orders %}
+                        <tr>
+                            <td><code>{{ order.order_id }}</code></td>
+                            <td>{{ order.username }}</td>
+                            <td>{{ order['items']|length }} item(s)</td>
+                            <td>₹{{ "%.2f"|format(order.total_amount) }}</td>
+                            <td><span class="order-status status-{{ order.status|lower }}">{{ order.status }}</span>
+                            </td>
+                            <td>{{ order.created_at }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="empty-state-sm">
+                <p>No orders yet.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% block title %}HomeMade Pickles & Snacks — Fresh & Authentic{% endblock %}
+
+{% block content %}
+<!-- ─── Hero Section ───────────────────────────────────────────────── -->
+<section class="hero">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <h1 class="hero-title">
+            <span class="hero-emoji">🫙</span>
+            HomeMade Pickles & Snacks
+        </h1>
+        <p class="hero-subtitle">
+            Authentic handmade pickles, chutneys & snacks — crafted with traditional recipes and the freshest
+            ingredients.
+        </p>
+        <div class="hero-actions">
+            <a href="{{ url_for('products.product_list') }}" class="btn btn-primary btn-lg">
+                🛍️ Shop Now
+            </a>
+            <a href="#featured" class="btn btn-outline btn-lg">
+                ⭐ Featured Items
+            </a>
+        </div>
+        <div class="hero-badges">
+            <span class="badge">🌿 100% Natural</span>
+            <span class="badge">🏠 Homemade</span>
+            <span class="badge">📦 Fast Delivery</span>
+            <span class="badge">❤️ Made with Love</span>
+        </div>
+    </div>
+</section>
+
+<!-- ─── Featured Products ──────────────────────────────────────────── -->
+<section id="featured" class="section">
+    <div class="container">
+        <h2 class="section-title">⭐ Featured Products</h2>
+        <p class="section-subtitle">Our most loved pickles and snacks, handpicked for you</p>
+
+        <div class="product-grid">
+            {% for product in featured_products %}
+            <div class="product-card">
+                <div class="product-image">
+                    <span class="product-emoji">{{ product.image }}</span>
+                    <span class="product-category-badge">{{ product.category }}</span>
+                </div>
+                <div class="product-info">
+                    <h3 class="product-name">{{ product.name }}</h3>
+                    <p class="product-desc">{{ product.description[:80] }}...</p>
+                    <div class="product-footer">
+                        <span class="product-price">₹{{ "%.2f"|format(product.price) }}</span>
+                        <div class="product-actions">
+                            <a href="{{ url_for('products.product_detail', product_id=product.id) }}"
+                                class="btn btn-sm btn-outline">View</a>
+                            {% if product.stock > 0 %}
+                            <a href="{{ url_for('cart.add_to_cart', product_id=product.id) }}"
+                                class="btn btn-sm btn-primary">Add 🛒</a>
+                            {% else %}
+                            <span class="out-of-stock">Out of Stock</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="section-cta">
+            <a href="{{ url_for('products.product_list') }}" class="btn btn-primary btn-lg">View All Products →</a>
+        </div>
+    </div>
+</section>
+
+<!-- ─── Why Choose Us ──────────────────────────────────────────────── -->
+<section class="section section-alt">
+    <div class="container">
+        <h2 class="section-title">🌟 Why Choose Us?</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <span class="feature-icon">🌿</span>
+                <h3>All Natural</h3>
+                <p>No preservatives, no artificial colors. Just pure, natural ingredients.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">👩‍🍳</span>
+                <h3>Traditional Recipes</h3>
+                <p>Recipes passed down through generations, preserving authentic flavors.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">🏠</span>
+                <h3>Homemade Fresh</h3>
+                <p>Every batch is made fresh in small quantities with personal care.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">🚚</span>
+                <h3>Pan-India Delivery</h3>
+                <p>We deliver our fresh products across India with secure packaging.</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

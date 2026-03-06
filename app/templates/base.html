@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="HomeMade Pickles & Snacks — Authentic homemade pickles, chutneys, and snacks delivered to your doorstep.">
+    <title>{% block title %}HomeMade Pickles & Snacks{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- ─── Navigation ─────────────────────────────────────────────── -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="{{ url_for('products.index') }}" class="nav-logo">
+                <span class="logo-icon">🫙</span>
+                <span class="logo-text">HomeMade Pickles</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="{{ url_for('products.index') }}">🏠 Home</a></li>
+                <li><a href="{{ url_for('products.product_list') }}">🛍️ Products</a></li>
+                <li>
+                    <a href="{{ url_for('cart.view_cart') }}">
+                        🛒 Cart
+                        {% if session.get('cart') %}
+                            <span class="cart-badge">{{ session['cart'] | length }}</span>
+                        {% endif %}
+                    </a>
+                </li>
+                {% if session.get('logged_in') %}
+                    <li><a href="{{ url_for('orders.order_history') }}">📦 Orders</a></li>
+                    {% if session.get('user', {}).get('is_admin') %}
+                        <li><a href="{{ url_for('orders.admin_dashboard') }}" class="admin-link">⚙️ Admin</a></li>
+                    {% endif %}
+                    <li class="nav-user">
+                        <span class="user-greeting">Hi, {{ session['user']['username'] }}</span>
+                        <a href="{{ url_for('auth.logout') }}" class="btn-logout">Logout</a>
+                    </li>
+                {% else %}
+                    <li><a href="{{ url_for('auth.login') }}">🔑 Login</a></li>
+                    <li><a href="{{ url_for('auth.register') }}" class="btn-register">📝 Register</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ─── Flash Messages ─────────────────────────────────────────── -->
+    <div class="flash-container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash flash-{{ category }}">
+                        {{ message }}
+                        <button class="flash-close" onclick="this.parentElement.remove()">✕</button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <!-- ─── Main Content ───────────────────────────────────────────── -->
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- ─── Footer ─────────────────────────────────────────────────── -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <span class="logo-icon">🫙</span>
+                <span>HomeMade Pickles & Snacks</span>
+            </div>
+            <p class="footer-tagline">Authentic flavors, made with love ❤️</p>
+            <p class="footer-copy">&copy; 2026 HomeMade Pickles & Snacks. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Auto-dismiss flash messages after 4 seconds
+        setTimeout(() => {
+            document.querySelectorAll('.flash').forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(-10px)';
+                setTimeout(() => el.remove(), 300);
+            });
+        }, 4000);
+    </script>
+</body>
+</html>

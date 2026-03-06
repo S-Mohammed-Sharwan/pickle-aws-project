@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Order Confirmed! — HomeMade Pickles & Snacks{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="success-card">
+            <div class="success-icon">✅</div>
+            <h1>Order Placed Successfully!</h1>
+            <p class="success-subtitle">Thank you for your order. Your delicious pickles & snacks are on the way!</p>
+
+            <div class="order-details-card">
+                <h3>Order Details</h3>
+                <div class="order-meta">
+                    <div class="meta-item">
+                        <span class="meta-label">Order ID</span>
+                        <span class="meta-value">{{ order.order_id }}</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Date</span>
+                        <span class="meta-value">{{ order.created_at }}</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Status</span>
+                        <span class="meta-value status-confirmed">{{ order.status }}</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Total</span>
+                        <span class="meta-value">₹{{ "%.2f"|format(order.total_amount) }}</span>
+                    </div>
+                </div>
+
+                <h4>Items Ordered</h4>
+                <div class="order-items-list">
+                    {% for item in order['items'] %}
+                    <div class="order-item-row">
+                        <span>{{ item.name }} × {{ item.quantity }}</span>
+                        <span>₹{{ "%.2f"|format(item.subtotal) }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="success-actions">
+                <a href="{{ url_for('orders.order_history') }}" class="btn btn-primary">📦 View Order History</a>
+                <a href="{{ url_for('products.product_list') }}" class="btn btn-outline">🛍️ Continue Shopping</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

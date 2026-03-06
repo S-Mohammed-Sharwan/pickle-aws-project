@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Page Not Found — HomeMade Pickles & Snacks{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="empty-state">
+            <span class="empty-icon">😕</span>
+            <h3>{{ message or "Page Not Found" }}</h3>
+            <p>Sorry, the page you're looking for doesn't exist.</p>
+            <a href="{{ url_for('products.index') }}" class="btn btn-primary btn-lg">← Back to Home</a>
+        </div>
+    </div>
+</section>
+{% endblock %}
