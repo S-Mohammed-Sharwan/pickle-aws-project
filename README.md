@@ -107,6 +107,20 @@ Open **http://127.0.0.1:5000** in your browser.
 
 ## ☁️ AWS Deployment
 
+For full step-by-step deployment instructions, see **[DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md)**.
+
+Quick summary:
+
+1. **Create DynamoDB tables** (Products, Users, Orders)
+2. **Create IAM Role** with DynamoDB access
+3. **Launch EC2** (Ubuntu, t2.micro)
+4. **Clone repo and install** dependencies
+5. **Set `USE_DYNAMODB=true`** in environment
+6. **Configure Gunicorn** as systemd service
+7. **Configure Nginx** as reverse proxy
+8. **Seed data** into DynamoDB
+9. **Access** at `http://<EC2-Public-IP>`
+
 ### Run with Gunicorn (EC2)
 
 ```bash
