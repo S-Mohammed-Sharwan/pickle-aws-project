@@ -13,7 +13,8 @@
                 {% for item in cart_items %}
                 <div class="cart-item">
                     <div class="cart-item-image">
-                        <span class="product-emoji">{{ item.product.image }}</span>
+                        <img src="{{ url_for('static', filename=item.product.image) }}" alt="{{ item.product.name }}"
+                            class="cart-item-img">
                     </div>
                     <div class="cart-item-details">
                         <h3>{{ item.product.name }}</h3>

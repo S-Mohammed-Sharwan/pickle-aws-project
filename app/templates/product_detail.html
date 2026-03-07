@@ -8,7 +8,8 @@
 
         <div class="product-detail">
             <div class="product-detail-image">
-                <span class="product-emoji-lg">{{ product.image }}</span>
+                <img src="{{ url_for('static', filename=product.image) }}" alt="{{ product.name }}"
+                    class="product-img-lg">
                 <span class="product-category-badge">{{ product.category }}</span>
             </div>
             <div class="product-detail-info">

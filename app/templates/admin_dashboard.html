@@ -5,7 +5,93 @@
 <section class="section">
     <div class="container">
         <h1 class="section-title">⚙️ Admin Dashboard</h1>
-        <p class="section-subtitle">Manage inventory and view orders</p>
+        <p class="section-subtitle">Manage inventory and view all customer orders</p>
+
+        <!-- ─── Order Statistics ────────────────────────────────────── -->
+        <div class="admin-stats">
+            <div class="stat-card">
+                <span class="stat-icon">🧾</span>
+                <div class="stat-info">
+                    <span class="stat-number">{{ orders|length }}</span>
+                    <span class="stat-label">Total Orders</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-icon">💰</span>
+                <div class="stat-info">
+                    <span class="stat-number">₹{{ "%.2f"|format(orders|sum(attribute='total_amount')) }}</span>
+                    <span class="stat-label">Total Revenue</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-icon">📦</span>
+                <div class="stat-info">
+                    <span class="stat-number">{{ products|length }}</span>
+                    <span class="stat-label">Products</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-icon">⚠️</span>
+                <div class="stat-info">
+                    <span class="stat-number">{{ products|selectattr('stock', 'le', 5)|list|length }}</span>
+                    <span class="stat-label">Low Stock Items</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ─── All Customer Orders (Detailed) ─────────────────────── -->
+        <div class="admin-section">
+            <h2>🧾 All Customer Orders</h2>
+            {% if orders %}
+            <div class="admin-orders-list">
+                {% for order in orders %}
+                <div class="admin-order-card">
+                    <div class="admin-order-header">
+                        <div class="admin-order-meta">
+                            <span class="order-id">{{ order.order_id }}</span>
+                            <span class="order-status status-{{ order.status|lower }}">{{ order.status }}</span>
+                        </div>
+                        <div class="admin-order-info">
+                            <span>👤 <strong>{{ order.username }}</strong></span>
+                            <span>📅 {{ order.created_at }}</span>
+                            <span>💰 <strong>₹{{ "%.2f"|format(order.total_amount) }}</strong></span>
+                        </div>
+                    </div>
+                    <div class="admin-order-items">
+                        <table class="order-items-table">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Qty</th>
+                                    <th>Price</th>
+                                    <th>Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in order['items'] %}
+                                <tr>
+                                    <td><strong>{{ item.name }}</strong></td>
+                                    <td>{{ item.quantity }}</td>
+                                    <td>₹{{ "%.2f"|format(item.price) }}</td>
+                                    <td><strong>₹{{ "%.2f"|format(item.subtotal) }}</strong></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="admin-order-footer">
+                        <span>{{ order['items']|length }} item(s)</span>
+                        <span class="order-total">Order Total: ₹{{ "%.2f"|format(order.total_amount) }}</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-state-sm">
+                <p>No orders have been placed yet.</p>
+            </div>
+            {% endif %}
+        </div>
 
         <!-- ─── Inventory Management ───────────────────────────────── -->
         <div class="admin-section">
@@ -15,6 +101,7 @@
                     <thead>
                         <tr>
                             <th>ID</th>
+                            <th>Image</th>
                             <th>Product</th>
                             <th>Category</th>
                             <th>Price</th>
@@ -28,9 +115,10 @@
                             class="{% if product.stock == 0 %}row-out-of-stock{% elif product.stock <= 5 %}row-low-stock{% endif %}">
                             <td><code>{{ product.id }}</code></td>
                             <td>
-                                <span>{{ product.image }}</span>
-                                {{ product.name }}
+                                <img src="{{ url_for('static', filename=product.image) }}" alt="{{ product.name }}"
+                                    class="admin-product-img">
                             </td>
+                            <td>{{ product.name }}</td>
                             <td>{{ product.category }}</td>
                             <td>₹{{ "%.2f"|format(product.price) }}</td>
                             <td>
@@ -53,44 +141,6 @@
                     </tbody>
                 </table>
             </div>
-        </div>
-
-        <!-- ─── Recent Orders ──────────────────────────────────────── -->
-        <div class="admin-section">
-            <h2>🧾 Recent Orders</h2>
-            {% if orders %}
-            <div class="admin-table-wrapper">
-                <table class="admin-table">
-                    <thead>
-                        <tr>
-                            <th>Order ID</th>
-                            <th>Customer</th>
-                            <th>Items</th>
-                            <th>Total</th>
-                            <th>Status</th>
-                            <th>Date</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for order in orders %}
-                        <tr>
-                            <td><code>{{ order.order_id }}</code></td>
-                            <td>{{ order.username }}</td>
-                            <td>{{ order['items']|length }} item(s)</td>
-                            <td>₹{{ "%.2f"|format(order.total_amount) }}</td>
-                            <td><span class="order-status status-{{ order.status|lower }}">{{ order.status }}</span>
-                            </td>
-                            <td>{{ order.created_at }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-            {% else %}
-            <div class="empty-state-sm">
-                <p>No orders yet.</p>
-            </div>
-            {% endif %}
         </div>
     </div>
 </section>

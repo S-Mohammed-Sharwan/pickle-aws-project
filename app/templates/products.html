@@ -27,7 +27,8 @@
             {% for product in products %}
             <div class="product-card">
                 <div class="product-image">
-                    <span class="product-emoji">{{ product.image }}</span>
+                    <img src="{{ url_for('static', filename=product.image) }}" alt="{{ product.name }}"
+                        class="product-img">
                     <span class="product-category-badge">{{ product.category }}</span>
                     {% if product.stock <= 5 and product.stock> 0 %}
                         <span class="low-stock-badge">Only {{ product.stock }} left!</span>
