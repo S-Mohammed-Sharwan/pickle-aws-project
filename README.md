@@ -146,7 +146,7 @@ Every model file contains commented DynamoDB equivalents using `boto3` — simpl
 
 - **Backend:** Python, Flask, Flask Blueprints, Flask-Session
 - **Frontend:** HTML5, CSS3, Jinja2 Templates
-- **Database:** Python Dictionaries (dev) / AWS DynamoDB (prod)
+- **Database:** Python Dictionaries (dev) / AWS DynamoDB (prod) — see [ER Diagram](ER_DIAGRAM.md)
 - **Deployment:** Gunicorn, AWS EC2 compatible
 
 ---
