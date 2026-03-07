@@ -1,6 +1,10 @@
 # 📊 ER Diagram — HomeMade Pickles & Snacks
 
-## Entity Relationship Diagram
+## ER Diagram Image
+
+![ER Diagram](app/static/images/er_diagram.jpg)
+
+## Entity Relationship Diagram (Mermaid)
 
 ```mermaid
 erDiagram
